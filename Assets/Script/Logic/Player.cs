@@ -79,9 +79,9 @@ public class Player : MonoBehaviour
         {
             var hit = resultPath[i];
             
-            // --- ĐIỂM SỬA CHÍNH: Lấy tọa độ mặt trên (Chấm xanh) thay vì tâm khối ---
+            
             Vector3 targetPosition = hit.GetWalkPosition(); 
-            // ------------------------------------------------------------------------
+            
 
             if (i == resultPath.Count - 1 && resultPath.Count > 1)
             {
@@ -101,7 +101,7 @@ public class Player : MonoBehaviour
             s.JoinCallback(()=> transform.SetParent(hit.transform));
             
             if(!hit.noRotate)
-                // Đã sửa hàm LookAt để Player nhìn thẳng vào chấm xanh, không bị chúi đầu xuống đất
+                
                 s.Join(transform.DOLookAt(targetPosition, 0f)); 
 
             

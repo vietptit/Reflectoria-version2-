@@ -40,7 +40,7 @@ public class Waypoint : MonoBehaviour
         
         Gizmos.DrawSphere(GetWalkPosition(), 0.1f);
 
-        // 1. Vẽ 4 tia chữ thập để xem tầm quét
+        
         Gizmos.color = Color.cyan; 
         Vector3 blockCenter = transform.position - (transform.up * 0.5f);
         
@@ -55,7 +55,7 @@ public class Waypoint : MonoBehaviour
             Gizmos.DrawWireCube(blockCenter + dir * scanRadius, Vector3.one * 0.2f);
         }
 
-        // 2. VẼ ĐƯỜNG LIÊN KẾT GIỮA CÁC KHỐI (Dành cho BFS)
+        
         if (waypoints != null && waypoints.Count > 0)
         {
             Gizmos.color = Color.magenta; 
@@ -76,19 +76,19 @@ public class Waypoint : MonoBehaviour
     {
         List<Waypoint> currentNeighbors = new List<Waypoint>();
 
-        // 1. Tìm tâm thực sự của Block để làm tâm quét
+       
         Vector3 blockCenter = transform.position - (transform.up * 0.5f);
 
-        // 2. KHAI BÁO 4 HƯỚNG CHUẨN (Tuyệt đối, luôn song song mặt đất XZ)
+        
         Vector3[] crossDirections = new Vector3[]
         {
-            Vector3.forward, // Z+ (Trước)
-            Vector3.back,    // Z- (Sau)
-            Vector3.left,    // X- (Trái)
-            Vector3.right    // X+ (Phải)
+            Vector3.forward, 
+            Vector3.back,    
+            Vector3.left,    
+            Vector3.right   
         };
 
-        // 3. DÙNG BOXCAST QUÉT 4 HƯỚNG
+        
         foreach (Vector3 dir in crossDirections)
         {
             RaycastHit[] hits = Physics.BoxCastAll(blockCenter, Vector3.one * 0.2f, dir, Quaternion.identity, scanRadius, layerMask);
@@ -97,10 +97,10 @@ public class Waypoint : MonoBehaviour
             {
                 Waypoint wp = hit.collider.GetComponent<Waypoint>();
                 
-                // Đảm bảo là Waypoint, KHÔNG PHẢI LÀ CHÍNH NÓ, và chưa có trong list
+                
                 if (wp != null && wp != this && !currentNeighbors.Contains(wp))
                 {
-                    // --- BỘ LỌC KHOẢNG CÁCH (Fix lỗi nhận hàng xóm sớm) ---
+                    
                     float dist = Vector3.Distance(this.GetWalkPosition(), wp.GetWalkPosition());
 
                     if (dist <= maxNeighborDistance)
