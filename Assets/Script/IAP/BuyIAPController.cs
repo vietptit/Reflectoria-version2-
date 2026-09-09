@@ -9,7 +9,7 @@ public class BuyIAPController : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI price_text;
     public static BuyIAPController instance;
-    string id="";
+    IAPProductKey id;
     void Awake()
     {
         if(instance==null)
@@ -22,10 +22,10 @@ public class BuyIAPController : MonoBehaviour
 
     }
 
-    public void UpdatePriceProduct(string price,string id)
+    public void UpdatePriceProduct(string price, IAPProductKey iAPProductKey)
     {
         price_text.text=price;
-        this.id=id;
+        id=iAPProductKey;
     }
 
     public void BuyProduct()

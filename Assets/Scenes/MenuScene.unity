@@ -8958,7 +8958,7 @@ MonoBehaviour:
   UI_Return_click: {fileID: 701686753}
   levelCurrent: {fileID: 0}
   CanVasBuyToUnlocked: {fileID: 331825053}
-  isPC: 1
+  isPC: 0
 --- !u!4 &2080211268
 Transform:
   m_ObjectHideFlags: 0

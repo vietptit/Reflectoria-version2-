@@ -143,17 +143,4 @@ public class MoveController : BaseBlock
         }
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.green;
-        BoxCollider[] colliders = GetComponentsInChildren<BoxCollider>();
-        foreach (BoxCollider col in colliders)
-        {
-            Vector3 colCenter = col.transform.TransformPoint(col.center);
-            Vector3 colSize = Vector3.Scale(col.size, col.transform.lossyScale) * 0.95f;
-            
-            Gizmos.matrix = Matrix4x4.TRS(colCenter, col.transform.rotation, colSize);
-            Gizmos.DrawWireCube(Vector3.zero, Vector3.one);
-        }
-    }
 }

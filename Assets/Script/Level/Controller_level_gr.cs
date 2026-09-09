@@ -9,17 +9,15 @@ public class Controller_level_gr : MonoBehaviour
     Dictionary<IAPProductKey,LevelManager> DIC_LV_IAPKEY;
     void Awake()
     {
-        instance=this;
-    }
-
-    void Start()
-    {
+        if (instance == null) instance = this;
         DIC_LV_IAPKEY= new Dictionary<IAPProductKey, LevelManager>();
-        List<LevelManager> levelManagers= new List<LevelManager>();
-        levelManagers.AddRange(GetComponentsInChildren<LevelManager>());
-        foreach(var level in levelManagers)
+        LevelManager[] levelManagers = GetComponentsInChildren<LevelManager>();
+        foreach (var level in levelManagers)
         {
-            DIC_LV_IAPKEY.Add(level.iAPProductKey, level);
+            if (!DIC_LV_IAPKEY.ContainsKey(level.iAPProductKey))
+            {
+                DIC_LV_IAPKEY.Add(level.iAPProductKey, level);
+            }
         }
     }
 

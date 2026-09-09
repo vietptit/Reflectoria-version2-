@@ -10,26 +10,17 @@ public class IAPManager : MonoBehaviour
 {
     public static IAPManager instance;
     public static bool isInitialized{get;private set;}=false;
-    #region Key
-    public const string constellation2 = "constellation2";
-    public const string constellation3 = "constellation3";
-    public const string constellation4 = "constellation4";
-    public const string constellation5 = "constellation5";
-    public const string constellation6 = "constellation6";
-    public const string constellation7 = "constellation7";
-    public const string constellation8 = "constellation8";
-    public const string constellation9 = "constellation9";
-    public const string constellation10 = "constellation10";
-    public const string constellation11 = "constellation11";
-    public const string constellation12 = "constellation12";
-    public const string constellation13 = "constellation13";
-    #endregion
     StoreController storeController;
     
     async void Awake()
     {
-        
-        instance=this;
+        if(instance==null)   
+            instance=this;
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
 
         await InitIAP();
     }
@@ -132,28 +123,23 @@ public class IAPManager : MonoBehaviour
     }
     
 
-    List<ProductDefinition> BuildProductDefinition()
+    private List<ProductDefinition> BuildProductDefinition()
     {
-        var intialProduct= new List<ProductDefinition>();
-        intialProduct.Add(new ProductDefinition(constellation2,ProductType.NonConsumable));
-        intialProduct.Add(new ProductDefinition(constellation3,ProductType.NonConsumable));
-        intialProduct.Add(new ProductDefinition(constellation4,ProductType.NonConsumable));
-        intialProduct.Add(new ProductDefinition(constellation5,ProductType.NonConsumable));
-        intialProduct.Add(new ProductDefinition(constellation6,ProductType.NonConsumable));
-        intialProduct.Add(new ProductDefinition(constellation7,ProductType.NonConsumable));
-        intialProduct.Add(new ProductDefinition(constellation8,ProductType.NonConsumable));
-        intialProduct.Add(new ProductDefinition(constellation9,ProductType.NonConsumable));
-        intialProduct.Add(new ProductDefinition(constellation10,ProductType.NonConsumable));
-        intialProduct.Add(new ProductDefinition(constellation11,ProductType.NonConsumable));
-        intialProduct.Add(new ProductDefinition(constellation12,ProductType.NonConsumable));
-        intialProduct.Add(new ProductDefinition(constellation13,ProductType.NonConsumable));
+        var initialProducts = new List<ProductDefinition>();
+        string[] productKeys = Enum.GetNames(typeof(IAPProductKey));
+        
+        foreach (string key in productKeys)
+        {
+            initialProducts.Add(new ProductDefinition(key, ProductType.NonConsumable));
+        }
 
-        return intialProduct;
+        return initialProducts;
     }
 
-    public string GetPriceById(string id)
+    public string GetPriceById(IAPProductKey id)
     {
-        var product= storeController.GetProductById(id);
+        
+        var product= storeController.GetProductById(id.ToString());
         if (product != null && product.metadata != null)
         {
             return product.metadata.localizedPriceString;
@@ -161,26 +147,19 @@ public class IAPManager : MonoBehaviour
         return "Loading ...";
     }
 
-    public void BuyProductById(string id)
+    public void BuyProductById(IAPProductKey id)
     {
-        storeController.PurchaseProduct(id);
+        storeController.PurchaseProduct(id.ToString());
     }
     private void UnlockProduct(string productId)
     {
-        switch (productId)
+        if (Enum.TryParse(productId, out IAPProductKey parsedKey))
         {
-            case constellation2: Controller_level_gr.instance.UnlockedLevel(IAPProductKey.constellation2); break;
-            case constellation3: Controller_level_gr.instance.UnlockedLevel(IAPProductKey.constellation3); break;
-            case constellation4: Controller_level_gr.instance.UnlockedLevel(IAPProductKey.constellation4); break;
-            case constellation5: Controller_level_gr.instance.UnlockedLevel(IAPProductKey.constellation5); break;
-            case constellation6: Controller_level_gr.instance.UnlockedLevel(IAPProductKey.constellation6); break;
-            case constellation7: Controller_level_gr.instance.UnlockedLevel(IAPProductKey.constellation7); break;
-            case constellation8: Controller_level_gr.instance.UnlockedLevel(IAPProductKey.constellation8); break;
-            case constellation9: Controller_level_gr.instance.UnlockedLevel(IAPProductKey.constellation9); break;
-            case constellation10: Controller_level_gr.instance.UnlockedLevel(IAPProductKey.constellation10); break;
-            case constellation11: Controller_level_gr.instance.UnlockedLevel(IAPProductKey.constellation11); break;
-            case constellation12: Controller_level_gr.instance.UnlockedLevel(IAPProductKey.constellation12); break;
-            case constellation13: Controller_level_gr.instance.UnlockedLevel(IAPProductKey.constellation13); break;
+            Controller_level_gr.instance.UnlockedLevel(parsedKey);
+        }
+        else
+        {
+            Debug.LogError($"[IAP Cảnh báo] Sản phẩm {productId} chưa được định nghĩa trong Enum!");
         }
     }
 }
